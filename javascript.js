@@ -1,4 +1,6 @@
 const options = ['rock', 'paper', 'scissors'];
+let playerScore = 0;
+let computerScore = 0;
 
 // randomly return either rock, paper, scissor
 function computerPlay() {
@@ -6,60 +8,35 @@ function computerPlay() {
     return options[Math.floor(Math.random() * options.length)];
 }
 
-function playRound(playerSelection, computerSelection) {
+// play a round of rock, paper, scissors
+function playRound(e) {
+    let playerSelection = this.getAttribute('id'); 
+    let computerSelection = computerPlay();
     playerSelection = playerSelection.toLowerCase();
+
+    const resultContainer = document.querySelector(".result");
 
     if (playerSelection == computerSelection)
     {
-        return "tie";
+        resultContainer.textContent = "Tie! You both chose " + computerSelection;
     }
-
-    let playerWins = false;
-    switch (playerSelection)
+    else if ( (playerSelection == "rock" && computerSelection == "scissors") ||
+              (playerSelection == "paper" && computerSelection == "rock") ||
+              (playerSelection == "scissors" && computerSelection == "paper"))
     {
-        case "rock":
-            if (computerSelection == "scissors") playerWins = true; 
-            break;
-        case "paper":
-            if (computerSelection == "rock") playerWins = true;
-            break;
-        case "scissors":
-            if (computerSelection == "paper") playerWins = true;
-            break;
-        default:
-            return "Invalid input...";
+        resultContainer.textContent = "You win! " + playerSelection + " beats " + computerSelection;
+        playerScore++;
+        const scoreContainer = document.querySelector(".player-score");
+        scoreContainer.textContent = playerScore;
     }
-
-    if (playerWins)
+    else
     {
-        return "player";
-    }
-    return "computer";
-}
-
-function game() {
-    for (let i = 0; i < 5; i++)
-    {
-        let playerSelection = prompt("Please enter rock, paper, or scissors");
-        let computerSelection = computerPlay();
-        let result = playRound(playerSelection, computerSelection);
-        if (result == "tie")
-        {
-            console.log("Tie! You both chose " + computerSelection);
-        }
-        else if (result == "player")
-        {
-            console.log("You win! " + playerSelection + " beats " + computerSelection);
-        }
-        else if (result == "computer")
-        {
-            console.log("You lose :( " + computerSelection + " beats " + playerSelection);
-        }
-        else
-        {
-            console.log("Invalid input...");
-        }
+        resultContainer.textContent = "You lose :( " + computerSelection + " beats " + playerSelection;
+        computerScore++;
+        const scoreContainer = document.querySelector(".computer-score");
+        scoreContainer.textContent = computerScore;
     }
 }
 
-game();
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => button.addEventListener('click', playRound));
